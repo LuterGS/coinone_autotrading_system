@@ -1,15 +1,15 @@
 import tensorflow as tf
 import numpy
 import random
-import NN.Coin_NN.DataOptimize as knower
+import DataOptimize as knower
 
 class NeuralNetwork:
 
     learning_rate = 0.001
     data_knower = knower.datamaker()
 
-    INPUT_DATA = numpy.load('etc_input.npy')
-    ANSWER_DATA = numpy.load('etc_answer.npy')
+    INPUT_DATA = numpy.load('Data/etc_input.npy')
+    ANSWER_DATA = numpy.load('Data/etc_answer.npy')
     dropout_rate = tf.placeholder(tf.float32)
 
     #initiate input and anwer
@@ -91,7 +91,7 @@ class NeuralNetwork:
 
 
     def test(self):
-        sess = self.restore_weight("etc.pd")
+        sess = self.restore_weight("Data/etc.pd")
 
         random_num = random.randint(0, self.data_knower.etc_length)
         data_in = numpy.zeros((1,20))

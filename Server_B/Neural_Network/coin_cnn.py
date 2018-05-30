@@ -1,8 +1,6 @@
 import tensorflow as tf
 import numpy
-import random
-import os
-import NN.Coin_NN.DataOptimize as knower
+import DataOptimize as knower
 
 class NeuralNetwork:
 

@@ -40,7 +40,7 @@ class datamaker:
 
 
     def init_file(self, name):
-        self.raw_input = open(name + "_difference.txt", 'r')
+        self.raw_input = open("Data/" + name + "_difference.txt", 'r')
 
     def array_define_length(self, length):
         self.input_array = numpy.zeros((length, 20))
@@ -54,8 +54,8 @@ class datamaker:
         for i in range(0, length):
             self.one_line_read(i)
 
-        numpy.save(name + "_input.npy", self.input_array)
-        numpy.save(name + "_answer.npy", self.answer_array)
+        numpy.save("Data/" + name + "_input.npy", self.input_array)
+        numpy.save("Data/" + name + "_answer.npy", self.answer_array)
 
 
     def one_line_read(self, linenum):

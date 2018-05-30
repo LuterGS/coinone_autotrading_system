@@ -33,18 +33,8 @@ public class Buy_Sell implements Runnable {
 
 
          */
-        get_trainData();
-        wait_train_response();
-        read_from_response();
-
-        try {
-            Runtime.getRuntime().exec("rm -rf /home/lutergs_server/NFS/result/" /*저장 경로 */);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        mysql.insert_resultData(coinname, percent);
+        //이 함수는 현재 시간에서 코인데이터를 예측후 반납하는 함수임
+        judge_coin();
 
         //만약 코인의 상승률이 없을 경우에는 몇분간 존버시키자. Thread.sleep 으로 한시간정도 기다리게
         //코인 구매후 기다림을 하나의 함수로!
@@ -53,6 +43,30 @@ public class Buy_Sell implements Runnable {
 
         //TEST, 마저 작성해야 함
     }
+
+
+    private void judge_coin(){
+
+        get_trainData();
+        wait_train_response();
+        read_from_response();
+        mysql.insert_resultData(coinname, percent);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     private void get_trainData() {
@@ -115,9 +129,10 @@ public class Buy_Sell implements Runnable {
         return output;
     }
 
+    //트레이닝 시킬 자료를 저장하는 메소드
     private void write_data(double[][] input){
 
-        File file_output = new File("/home/lutergs_server/NFS/traindata/TRAIN_DATA.txt");
+        File file_output = new File("/home/lutergs_server/NFS/TRAIN_DATA.txt");
         BufferedWriter writer;
         int a, b;
 
@@ -138,7 +153,7 @@ public class Buy_Sell implements Runnable {
 
     }
 
-
+    //트레이닝 완료된 데이터가 있는지 확인하는 메소드
     private void wait_train_response(){
 
         File file;
@@ -152,10 +167,10 @@ public class Buy_Sell implements Runnable {
         }
     }
 
-
+    //트레이닝 완료된 데이터가 있을 때 트레이닝 완료된 데이터를 불러오는 메소드
     private void read_from_response(){
 
-        File file = new File("/home/lutergs_server/NFS/result/" /* 저장 경로 */);
+        File file = new File("/home/lutergs_server/NFS/result/result.txt");
         try {
             Scanner scan = new Scanner(file);
             this.coinname = scan.nextLine();

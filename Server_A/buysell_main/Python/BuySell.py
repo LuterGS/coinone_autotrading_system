@@ -94,9 +94,11 @@ if __name__ == "__main__":
     #   btc
     ########
     # 형식으로 되어 있음
+    # 이건 팀원과의 회의가 완료되야 파일 위치 지정 가능
+
 
     while True:
-        file = open("/home/lutergs_server/NFS/buysell/avaliable.txt", 'r')
+        file = open("/home/lutergs_server/NFS/traindata/avaliable.txt", 'r')
         type = int(file.readline())
         if type == 0:
             file.close()

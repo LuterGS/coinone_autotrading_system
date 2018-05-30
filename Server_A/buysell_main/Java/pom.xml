@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>LuterGS</groupId>
-    <artifactId>Crypto_Autotrade</artifactId>
+    <artifactId>Java</artifactId>
     <version>0.1.2-PRE_BETA</version>
 
     <packaging>jar</packaging>

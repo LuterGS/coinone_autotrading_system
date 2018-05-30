@@ -1,16 +1,13 @@
 package Main;
 
-import org.json.JSONObject;
-
 import java.io.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-public class Buy_Sell implements Buy_Sell_func, Runnable {
+public class Buy_Sell implements Runnable {
 //사고파는 방식을 교체할 수 있도록 설정
 
-    private Buy_Sell_func method = null;
     private Userdata userdata = new Userdata();
     private MySQL mysql = new MySQL();
     private String coinname;
@@ -55,14 +52,6 @@ public class Buy_Sell implements Buy_Sell_func, Runnable {
 
 
         //TEST, 마저 작성해야 함
-    }
-
-    public JSONObject buy_coin() {
-        return null;
-    }
-
-    public JSONObject sell_coin() {
-        return null;
     }
 
 

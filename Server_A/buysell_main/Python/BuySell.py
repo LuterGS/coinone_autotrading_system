@@ -97,34 +97,45 @@ if __name__ == "__main__":
     # 이건 팀원과의 회의가 완료되야 파일 위치 지정 가능
 
 
+
+
     while True:
-        file = open("/home/lutergs_server/NFS/traindata/avaliable.txt", 'r')
+        #지정 파일을 열음
+        file = open('FILEPATH', 'r')
         type = int(file.readline())
+
+        #0일때는 파이썬이 할 일이 없는 경우 (예외코드)
         if type == 0:
             file.close()
             pass
+        
+        #1일때는 지정된 값을 파일에서 읽어와 "사는" 부분
         elif type == 1:
             price = int(file.readline())
             qty = float(file.readline())
             currency = file.readline()
             test.buy(test, price, qty, currency)
             file.close()
-            creater = open("/home/lutergs_server/NFS/buysell/avaliable.txt", 'w')
+            creater = open('FILEPATH', 'w')
             creater.write(str(0))
             creater.close()
+            
+        #2일때는 지정된 값을 파일에서 읽어와 "파는" 부분
         elif type == 2:
             price = int(file.readline())
             qty = float(file.readline())
             currency = file.readline()
             test.sell(test, price, qty, currency)
             file.close()
-            creater = open("/home/lutergs_server/NFS/buysell/avaliable.txt", 'w')
+            creater = open('FILEPATH', 'w')
             creater.write(str(0))
             creater.close()
+            
+        #3일때는 사용자 정보를 json으로 넘겨주는 부분
         elif type == 3:
             os.system('rm -rf ./balance.json')
             test.balance(test)
             file.close()
-            creater = open("/home/lutergs_server/NFS/buysell/avaliable.txt", 'w')
+            creater = open('FILEPATH', 'w')
             creater.write(str(0))
             creater.close()

@@ -12,6 +12,7 @@ public class Buy_Sell implements Runnable {
     private MySQL mysql = new MySQL();
     private String coinname;
     private double percent;
+    private int time;
 
     public void run() {
 
@@ -73,6 +74,7 @@ public class Buy_Sell implements Runnable {
         double[][] coindata_num;
 
         ResultSet requested = this.mysql.get_latest_traindata(latest);
+        this.time = latest;
 
         //코인 순서는
         //eos, bch, qtum, iota, ltc, etc, btg, btc, omg, eth, xrp

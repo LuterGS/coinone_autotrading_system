@@ -10,7 +10,7 @@ public class Buy_Sell implements Runnable {
 
     private Userdata userdata = new Userdata();
     private MySQL mysql = new MySQL();
-    private String coinname;
+    private String coinName;
     private double percent;
     private int time;
 
@@ -48,7 +48,7 @@ public class Buy_Sell implements Runnable {
         get_trainData();
         wait_train_response();
         read_from_response();
-        mysql.insert_resultData(coinname, percent);
+        mysql.insert_resultData(coinName, percent);
     }
 
 

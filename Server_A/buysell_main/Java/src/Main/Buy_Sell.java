@@ -36,9 +36,6 @@ public class Buy_Sell implements Runnable {
         //이 함수는 현재 시간에서 코인데이터를 예측후 반납하는 함수임
         judge_coin();
 
-        //만약 코인의 상승률이 없을 경우에는 몇분간 존버시키자. Thread.sleep 으로 한시간정도 기다리게
-        //코인 구매후 기다림을 하나의 함수로!
-
 
 
         //TEST, 마저 작성해야 함

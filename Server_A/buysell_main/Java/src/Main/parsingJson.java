@@ -4,7 +4,7 @@ import org.json.simple.parser.ParseException;
 
 public class parsingJson {
     
-        public double[][] parsingCoinData(String jsonStr){
+        public double[][] parsingCoinData(){
 
             double[][]  coin = new double[12][2];
                 /*
@@ -27,7 +27,9 @@ public class parsingJson {
 
             try {
                 JSONParser jsonParser = new JSONParser();
-                JSONObject jsonObj = (JSONObject) jsonParser.parse(jsonStr);
+               
+                Object obj = jsonParser.parse(new FileReader("C:\\Users\\이호현\\test.json"));
+                JSONObject jsonObj = (JSONObject) obj;
 
                 coin[0][0] = Double.parseDouble(((JSONObject) jsonObj.get("ltc")).get("avail").toString());
                 coin[0][1] = Double.parseDouble(((JSONObject) jsonObj.get("ltc")).get("balance").toString());
@@ -60,6 +62,10 @@ public class parsingJson {
             } catch (ParseException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
+            }  catch (FileNotFoundException e) {
+            e.printStackTrace();
+             } catch (IOException e) {
+            e.printStackTrace();
             }
 
             return coin;

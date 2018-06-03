@@ -172,7 +172,7 @@ public class Buy_Sell implements Runnable {
         File file = new File("/home/lutergs_server/NFS/result/result.txt");
         try {
             Scanner scan = new Scanner(file);
-            this.coinname = scan.nextLine();
+            this.coinName = scan.nextLine();
             this.percent = Double.parseDouble(scan.nextLine());
         } catch (FileNotFoundException e) {
             e.printStackTrace();

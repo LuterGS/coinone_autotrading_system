@@ -13,7 +13,8 @@ public class parsingJson {
         public double[][] parsingCoinData(){
 
             double[][]  coin = new double[12][2];
-                /*
+            int [][] coinTemp = new int[12][2];
+           /*
            [0][]: ltc
            [1][]: bch
            [2][]: eos
@@ -29,7 +30,7 @@ public class parsingJson {
 
            [][0] : avail
            [][1] : balance
-            */
+           */
 
             try {
                 JSONParser jsonParser = new JSONParser();
@@ -63,6 +64,13 @@ public class parsingJson {
                 coin[11][1] = Double.parseDouble(((JSONObject) jsonObj.get("xrp")).get("balance").toString());
 
                //System.out.println(((JSONObject) jsonObj.get("xrp")).get("avail").toString());
+                for(int i =0; i<12; i++){
+                    for(int j=0; j<2; j++){
+                        coinTemp[i][j] = (int) (1000* coin[i][j]);
+                        coin[i][j] = (double) (coinTemp[i][j]);
+                        coin[i][j] = coin[i][j]/1000;
+                    }
+                }
 
 
             } catch (ParseException e) {

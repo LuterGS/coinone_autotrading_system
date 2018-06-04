@@ -4,7 +4,6 @@ import org.json.JSONObject;
 
 public class Save_CoinData extends DefineData implements Runnable{
 
-    private UserData userData = UserData.getInstance();
     private JSONObject ticker;
     private String[] value;
     private MysqlFunc mysqlFunc;

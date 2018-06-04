@@ -104,7 +104,7 @@ public class Buy_Sell extends DefineData implements Runnable {
             this.myCoinAmount = MathFunc.double_toDouble_4((balance[0][0] / this.buy_coinValue) * 0.99);
 
             JSONObject result = jsonFunc.buy(highest_coin_name, this.myCoinAmount, this.buy_coinValue);
-            System.out.println(result);
+            //System.out.println(result);
 
             try {
                 Thread.sleep(1500);
@@ -113,6 +113,7 @@ public class Buy_Sell extends DefineData implements Runnable {
             }
 
             if(jsonFunc.get_errorcode(result)){
+                System.out.printf("Buy Complete! buy %s, qty %.1f, price %d\n", highest_coin_name, this.myCoinAmount, this.buy_coinValue);
                 break;
             }
         }
@@ -131,7 +132,7 @@ public class Buy_Sell extends DefineData implements Runnable {
 
 
             JSONObject result = jsonFunc.sell(this.myCoinName, this.myCoinAmount * 0.99, this.cur_coinValue);
-            System.out.println(result);
+            //System.out.println(result);
 
             try {
                 Thread.sleep(1500);
@@ -154,6 +155,7 @@ public class Buy_Sell extends DefineData implements Runnable {
                 this.down_coinValue = 0;
 
                 mysqlFunc.insert_data("buysell", mysql_key, mysql_value);
+                System.out.printf("Sell Complete! Sell %s, profit is %s\n", mysql_value[2], mysql_value[4]);
                 break;
             }
         }
@@ -231,7 +233,7 @@ public class Buy_Sell extends DefineData implements Runnable {
         }
         for(a = 0; a < 11; a++){
             file_contents[a] = file_contents[a].substring(1, file_contents[a].length());
-            System.out.println(file_contents[a]);
+            //System.out.println(file_contents[a]);
         }
 
         //Training_Data에 저장
@@ -272,7 +274,7 @@ public class Buy_Sell extends DefineData implements Runnable {
         mysql_key_input[0] = "Date";
 
         for(a = 0; a < 11; a++){
-            train_result_percent[a] = Double.parseDouble(train_result_string[a].split(",")[1]) / 100;
+            train_result_percent[a] = (Double.parseDouble(train_result_string[a].split(",")[1]) / 100)- 10.01;
             mysql_input[a+3] = String.valueOf(train_result_percent[a]);
             mysql_key_input[a+3] = this.key[a+1];
         }
@@ -283,8 +285,10 @@ public class Buy_Sell extends DefineData implements Runnable {
         this.highest_coin_percent = train_result_percent[highest];
         mysql_key_input[1] = "highest_coin";
         mysql_key_input[2] = "highest_value";
-        mysql_input[1] = this.highest_coin_name;
+        mysql_input[1] = "\"" + this.highest_coin_name + "\"";
         mysql_input[2] = String.valueOf(this.highest_coin_percent);
+
+        //System.out.println(mysql_input[1] + ", " + this.highest_coin_name);
 
         mysqlFunc.insert_data("ai_result", mysql_key_input, mysql_input);
     }

@@ -100,7 +100,7 @@ public class Coinone_API {
 
         //논스값 := system class에서 1970년 1월 1일 0시 0분 0초로부터 경과한 시간을 초로
         long nonce = System.currentTimeMillis() + 3000;
-        System.out.printf("Nonce is, %d\n", nonce);
+        //System.out.printf("Nonce is, %d\n", nonce);
 
         //URL 객체로부터 balance_url
         HttpPost httpPost;
@@ -124,12 +124,12 @@ public class Coinone_API {
         */
         json_payload.put("nonce", nonce);
         json_payload.put("access_token", ACCESS_TOKEN);
-        System.out.println(json_payload);
+        //System.out.println(json_payload);
 
         //Base64 인코딩은 org.apache.common.codec 외부 라이브러리 이용
         //split한 이유는 디버깅하면서 알게 됐는데 hex처리 과정에서 \r\n 들어가서
         String payload_str = Base64.encodeBase64String(json_payload.toString().getBytes());
-        System.out.println(payload_str);
+        //System.out.println(payload_str);
 
         String[] payload_arr = payload_str.split("\r\n");
         //System.out.printf("%s, \n", payload_arr[0]);

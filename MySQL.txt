@@ -1,0 +1,56 @@
+MySQL에는 기본 Schema ticker_database가 있습니다.
+하위 table에 coin, ai_result, buysell 이 있습니다.
+
+해당 명렁어를 입력해 만들어주세요.
+
+
+CREATE TABLE `ai_result` (
+  `Date` int(11) NOT NULL,
+  `highest_coin` char(5) DEFAULT NULL,
+  `highest_value` float(6,4) DEFAULT NULL,
+  `eos` float(6,4) DEFAULT NULL,
+  `bch` float(6,4) DEFAULT NULL,
+  `qtum` float(6,4) DEFAULT NULL,
+  `iota` float(6,4) DEFAULT NULL,
+  `ltc` float(6,4) DEFAULT NULL,
+  `etc` float(6,4) DEFAULT NULL,
+  `btg` float(6,4) DEFAULT NULL,
+  `btc` float(6,4) DEFAULT NULL,
+  `omg` float(6,4) DEFAULT NULL,
+  `eth` float(6,4) DEFAULT NULL,
+  `xrp` float(6,4) DEFAULT NULL,
+  PRIMARY KEY (`Date`)
+)
+
+INSERT INTO ai_result(Date) value(0);
+
+
+CREATE TABLE `buysell` (
+  `Date` int(11) NOT NULL,
+  `coin` char(5) DEFAULT NULL,
+  `buy_value` int(11) DEFAULT NULL,
+  `sell_value` int(11) DEFAULT NULL,
+  `profit` int(11) DEFAULT NULL,
+  PRIMARY KEY (`Date`)
+)
+
+INSERT INTO buysell(Date) value(0);
+
+
+CREATE TABLE `coin` (
+  `Date` int(11) NOT NULL,
+  `eos` int(11) DEFAULT NULL,
+  `bch` int(11) DEFAULT NULL,
+  `qtum` int(11) DEFAULT NULL,
+  `iota` int(11) DEFAULT NULL,
+  `ltc` int(11) DEFAULT NULL,
+  `etc` int(11) DEFAULT NULL,
+  `btg` int(11) DEFAULT NULL,
+  `btc` int(11) DEFAULT NULL,
+  `omg` int(11) DEFAULT NULL,
+  `eth` int(11) DEFAULT NULL,
+  `xrp` int(11) DEFAULT NULL,
+  PRIMARY KEY (`Date`)
+)
+
+INSERT INTO coin(Date) value(0);

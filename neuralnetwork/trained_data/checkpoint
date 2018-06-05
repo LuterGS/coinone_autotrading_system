@@ -1,0 +1,2 @@
+model_checkpoint_path: "xrp.pd"
+all_model_checkpoint_paths: "xrp.pd"

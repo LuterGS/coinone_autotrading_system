@@ -1,12 +1,13 @@
 CryptoCurrency AutoTrading System
 ==================================
 
-현재 버전 : 0.1.2-Test_Beta 
+현재 버전 : 0.1.3-Test_Beta 
 
 제작자: LuterGS, emiling, Jonnson_, Randomshot
 
 # 설명
  * 이 프로그램은 현재 테스트 베타 버전입니다. 언제든지 비정상 동작을 할 가능성이 있습니다. 
+ * (TEMP) 현재 인공신경망 데이터가 완전히 올라가지 않았습니다.
  
 # 서버 세팅
  * 이 프로그램은 리눅스 서버 두 개가 있어야 동작합니다.

@@ -3,7 +3,7 @@ CryptoCurrency AutoTrading System
 
 현재 버전 : 0.1.3-Test_Beta 
 
-제작자: LuterGS, emiling, Jonnson_, Randomshot
+제작자: LuterGS, emiling, Glacier, Randomshot
 
 # 설명
  * 이 프로그램은 현재 테스트 베타 버전입니다. 언제든지 비정상 동작을 할 가능성이 있습니다. 

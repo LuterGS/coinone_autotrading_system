@@ -1,5 +1,7 @@
 package Main;
 
+import org.json.JSONObject;
+
 public class Main {
     
     public static void main(String[] args){
@@ -13,5 +15,27 @@ public class Main {
 
         thread1.start();
         thread2.start();
+
+
+
+        /*
+        JSONObject test = new JSONObject();
+        JSONObject result;
+        test.put("currency", "btc");
+        UserData userData = UserData.getInstance();
+        String Access = userData.getCoinone_access_token();
+        String Secret = userData.getCoinone_secret_key();
+
+        try {
+            result = Coinone_API.get_info(test, "order", Access, Secret);
+            System.out.println(result);
+            int ordernum = result.getJSONArray("limitOrders").length();
+            System.out.println(ordernum);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+*/
+
+        //EmailFunc.sendMail("BTC", "10.3", "120329", "2042", 1);
     }
 }

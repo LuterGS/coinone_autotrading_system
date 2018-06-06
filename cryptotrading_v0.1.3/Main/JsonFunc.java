@@ -1,6 +1,7 @@
 package Main;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class JsonFunc extends DefineData {
@@ -31,6 +32,7 @@ public class JsonFunc extends DefineData {
         int a;
         JSONObject balance = this.balance();
         double[][] output = new double[this.key.length][2];
+
         /*
             Definedata에 있는 String의 key를 따르되, 1번이 Date가 아니라 KRW임
             [][0] : avail - 현재 거래 가능한 액수
@@ -100,6 +102,31 @@ public class JsonFunc extends DefineData {
     }
 
 
+    //order가 정상적으로 완료되었는지 확인하는 메소드
+    public boolean order_check(String coin_name){
+
+        UserData userData = UserData.getInstance();
+        String ACCESS_TOKEN = userData.getCoinone_access_token();
+        String SECRET_KEY = userData.getCoinone_secret_key();
+        int checker = 0;
+
+        JSONObject input = new JSONObject();
+        JSONObject output;
+        input.put("currency", coin_name);
+
+        output = get_safe_data(input, "order", ACCESS_TOKEN, SECRET_KEY);
+        checker = output.getJSONArray("limitOrders").length();
+
+        if(checker == 0) {
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
+
+    //balance를 가져오는 메소드, 다른 클래스에서 사용 시에는 double형 2차배열로 넘겨주기 때문에 private임
     private JSONObject balance(){
 
         UserData userData = UserData.getInstance();
@@ -109,37 +136,34 @@ public class JsonFunc extends DefineData {
 
         JSONObject input = new JSONObject();
         JSONObject output = new JSONObject();
-        output.put("erroCcode", 103);
-        try {
-            output = Coinone_API.get_info(input, "balance", ACCESS_TOKEN, SECRET_KEY);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        output = get_safe_data(input, "balance", ACCESS_TOKEN, SECRET_KEY);
         return output;
     }
 
+
+    //sell하는 메소드
     protected JSONObject sell(String coin_name, double quantity, int price){
 
+        boolean successful_checker = false;
         UserData userData = UserData.getInstance();
         String ACCESS_TOKEN = userData.getCoinone_access_token();
         String SECRET_KEY = userData.getCoinone_secret_key();
 
         JSONObject input = new JSONObject();
         JSONObject output = new JSONObject();
-        output.put("erroCcode", 103);
         input.put("currency", coin_name);
         input.put("qty", quantity);
         input.put("price", price);
 
+        output = get_safe_data(input, "sell", ACCESS_TOKEN, SECRET_KEY);
         System.out.println(output);
-        try {
-            output = Coinone_API.get_info(input, "sell", ACCESS_TOKEN, SECRET_KEY);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
         return output;
     }
 
+
+    //buy 하는 메소드
     protected JSONObject buy(String coin_name, double quantity, int price){
 
         UserData userData = UserData.getInstance();
@@ -148,16 +172,35 @@ public class JsonFunc extends DefineData {
 
         JSONObject input = new JSONObject();
         JSONObject output = new JSONObject();
-        output.put("errorCode", 103);
         input.put("currency", coin_name);
         input.put("qty", quantity);
         input.put("price", price);
 
+        output = get_safe_data(input, "buy", ACCESS_TOKEN, SECRET_KEY);
         System.out.println(output);
-        try {
-            output = Coinone_API.get_info(input, "buy", ACCESS_TOKEN, SECRET_KEY);
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        return output;
+    }
+
+
+    //정상적인 JSONObject를 받아올 때까지 작업을 반복하는 메소드
+    protected JSONObject get_safe_data(JSONObject input, String type, String ACCESS_TOKEN, String SECRET_KEY){
+
+        boolean successful_checker = false;
+        JSONObject output = new JSONObject();
+
+        while(true) {
+            try {
+                output = Coinone_API.get_info(input, type, ACCESS_TOKEN, SECRET_KEY);
+                successful_checker = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                successful_checker = false;
+            }
+
+            if(successful_checker){
+                break;
+            }
         }
         return output;
     }

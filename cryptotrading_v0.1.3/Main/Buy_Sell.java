@@ -56,6 +56,16 @@ public class Buy_Sell extends DefineData implements Runnable {
 
                     this.coinBuy();
                     tradeSwitch = true;
+
+                    //구매가 완료될 때까지 대기
+                    while(!jsonFunc.order_check(myCoinName)){
+                        System.out.println("Waiting for buy complete...");
+                        try {
+                            Thread.sleep(3000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
 
@@ -67,10 +77,11 @@ public class Buy_Sell extends DefineData implements Runnable {
                 tradeSwitch = false;
                 set_training_data();
                 start_training();
+                this.myCoinName = highest_coin_name;
             }
 
 
-            //떡락 코인 판매
+            //예상치의 음수값보다 더 떨어졌을 때, 코인 판매
             if(tradeSwitch){
 
                 if(cur_coinValue < down_coinValue){
@@ -79,32 +90,43 @@ public class Buy_Sell extends DefineData implements Runnable {
                     tradeSwitch = false;
                     set_training_data();
                     start_training();
+                    this.myCoinName = highest_coin_name;
                 }
             }
 
             try {
-                Thread.sleep(10000);
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+            System.out.printf("Buy : %d, Up : %d, Down : %d, Cur : %d\n", this.buy_coinValue, this.up_coinValue, this.down_coinValue, this.cur_coinValue);
         }
     }
 
 
+    //코인 구매 메소드
     private void coinBuy() {
 
+        //구매할 코인의 이름을 설정
         this.myCoinName = this.highest_coin_name;
 
+        //무결성을 위해 while로 반복을 돌게 함
         while(true) {
 
-            this.buy_coinValue = jsonFunc.get_orderbook_minmax(highest_coin_name)[1];
-            this.up_coinValue = (int) (this.buy_coinValue * (1 + highest_coin_percent));
-            this.down_coinValue = (int) (this.buy_coinValue * (1 - highest_coin_percent));
+            //buy는 구매가, up은 인공지능 퍼센트만큼의 양을 더한 값, down은 인공지능 퍼센트만큼의 양을 뺀 값
+            this.buy_coinValue = jsonFunc.get_orderbook_minmax(highest_coin_name)[0];
+            this.up_coinValue = (int) (this.buy_coinValue * (1 + (highest_coin_percent / 100)));
+            this.down_coinValue = (int) (this.buy_coinValue * (1 - (highest_coin_percent / 100)));
 
+            System.out.printf("Buy : %d, Up : %d, Down : %d, Cur : %d\n", this.buy_coinValue, this.up_coinValue, this.down_coinValue, this.cur_coinValue);
+
+
+            //myCoinAmount는 살 코인의 양, 현재 돈의 99%를 씀
             this.myCoinAmount = MathFunc.double_toDouble_4((balance[0][0] / this.buy_coinValue) * 0.99);
 
+            //구매 메소드 호출
             JSONObject result = jsonFunc.buy(highest_coin_name, this.myCoinAmount, this.buy_coinValue);
-            //System.out.println(result);
 
             try {
                 Thread.sleep(1500);
@@ -112,27 +134,30 @@ public class Buy_Sell extends DefineData implements Runnable {
                 e.printStackTrace();
             }
 
+            //정상완료 되었을 때 break
             if(jsonFunc.get_errorcode(result)){
+                /*EmailFunc.sendMail(
+                        highest_coin_name, String.valueOf(myCoinAmount), String.valueOf(buy_coinValue),
+                        String.valueOf(latest_ticker_date), 0);*/
                 System.out.printf("Buy Complete! buy %s, qty %.1f, price %d\n", highest_coin_name, this.myCoinAmount, this.buy_coinValue);
                 break;
             }
         }
-
-        //서버정상작동 확인
     }
 
 
-    //기존 예상치보다 조금이라도 더 많이 떡상했으면 즉시 판매
+    //코인 판매 메소드
     private void coinSell() {
 
+        //mysql에 sell 정보를 넣기 위한 String형의 key, value 선언
         String[] mysql_key = new String[5], mysql_value = new String[5];
 
         while(true) {
 
+            //판매 메소드 호출
+            System.out.printf("Sell start! sell %s, qty %.1f, price %d\n", this.myCoinName, MathFunc.double_toDouble_4(this.myCoinAmount * 0.999), this.cur_coinValue);
+            JSONObject result = jsonFunc.sell(this.myCoinName, MathFunc.double_toDouble_4(this.myCoinAmount * 0.999), this.cur_coinValue);
 
-
-            JSONObject result = jsonFunc.sell(this.myCoinName, this.myCoinAmount * 0.99, this.cur_coinValue);
-            //System.out.println(result);
 
             try {
                 Thread.sleep(1500);
@@ -140,27 +165,34 @@ public class Buy_Sell extends DefineData implements Runnable {
                 e.printStackTrace();
             }
 
+            //정상완료 되었을 때
             if(jsonFunc.get_errorcode(result)){
 
-                mysql_key[0] = "Date"; mysql_key[1] = "coin"; mysql_key[2] = "buy_valeue"; mysql_key[3] = "sell_value"; mysql_key[5] = "profit";
+                //mysql에 넣을 값들 지정 후, myCoinName 등등의 변수 초기화
+                mysql_key[0] = "Date"; mysql_key[1] = "coin"; mysql_key[2] = "buy_value"; mysql_key[3] = "sell_value"; mysql_key[4] = "profit";
                 mysql_value[0] = String.valueOf(latest_ticker_date);
-                mysql_value[1] = myCoinName;
+                mysql_value[1] = "\"" + myCoinName + "\"";
                 mysql_value[2] = String.valueOf(buy_coinValue);
                 mysql_value[3] = String.valueOf(cur_coinValue);
-                mysql_value[4] = String.valueOf(cur_coinValue - buy_coinValue);
+                mysql_value[4] = String.valueOf((cur_coinValue - buy_coinValue) * jsonFunc.get_orderbook_minmax(myCoinName)[0]);
                 this.myCoinName = "null";
                 this.myCoinAmount = 0.0;
                 this.buy_coinValue = 0;
                 this.up_coinValue = 0;
                 this.down_coinValue = 0;
 
+                //mysql에 넣고, sell 완료 출력 후 break
                 mysqlFunc.insert_data("buysell", mysql_key, mysql_value);
+                /*EmailFunc.sendMail(
+                        myCoinName, String.valueOf(MathFunc.double_toDouble_4(this.myCoinAmount * 0.999)), String.valueOf(cur_coinValue),
+                        String.valueOf(latest_ticker_date), 1);*/
                 System.out.printf("Sell Complete! Sell %s, profit is %s\n", mysql_value[2], mysql_value[4]);
                 break;
             }
         }
 
     }
+
 
     //기존 예상치보다 떡상인지 체크
     private boolean checkChange() {
@@ -171,12 +203,17 @@ public class Buy_Sell extends DefineData implements Runnable {
 
     }
 
+
     //실시간 최고 코인이 떡락중인지 체크
     private boolean dropCheck() {
 
         if (highest_coin_percent < 0) { return true; }
         else { return false; }
     }
+
+
+
+    //현재 가지고 있는 코인 양 가져옴
 
 
 
@@ -203,7 +240,6 @@ public class Buy_Sell extends DefineData implements Runnable {
 
                 for(a = 0; a < this.key.length - 1; a++){
                     train_data_before[a][b] = Double.parseDouble(traindata_from_mysql.getString(this.key[a + 1]));
-                    //System.out.printf("cur data : coin %s, %.1f, [%d][%d]\n", this.key[a+1], train_data_before[a][b], a, b);
                 }
 
                 if(b == 20){
@@ -216,7 +252,6 @@ public class Buy_Sell extends DefineData implements Runnable {
                 for(b = 0; b < 20; b++){
                     train_data_after[a][b] =
                             MathFunc.double_toDouble_4((train_data_before[a][b+1] - train_data_before[a][b])/train_data_before[a][b] * 100);
-                    //System.out.printf("IN : %.1f, %.1f , %.1f\n", train_data_after[a][b], train_data_before[a][b], train_data_before[a][b+1]);
                 }
             }
 
@@ -224,7 +259,7 @@ public class Buy_Sell extends DefineData implements Runnable {
             e.printStackTrace();
         }
 
-        //한 코인에 대한 데이터 당 String 하나에 저장
+        //한 코인에 대한 데이터 20개당 String 하나에 저장
         for(a = 0; a < 11; a++){
             for(b = 0; b < 20; b++){
                 file_contents[a] += String.valueOf(train_data_after[a][b]);
@@ -233,7 +268,6 @@ public class Buy_Sell extends DefineData implements Runnable {
         }
         for(a = 0; a < 11; a++){
             file_contents[a] = file_contents[a].substring(1, file_contents[a].length());
-            //System.out.println(file_contents[a]);
         }
 
         //Training_Data에 저장
@@ -288,8 +322,7 @@ public class Buy_Sell extends DefineData implements Runnable {
         mysql_input[1] = "\"" + this.highest_coin_name + "\"";
         mysql_input[2] = String.valueOf(this.highest_coin_percent);
 
-        //System.out.println(mysql_input[1] + ", " + this.highest_coin_name);
-
+        //mysql table "ai_result"에 데이터 넣음
         mysqlFunc.insert_data("ai_result", mysql_key_input, mysql_input);
     }
 

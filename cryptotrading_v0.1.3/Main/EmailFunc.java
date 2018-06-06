@@ -20,8 +20,8 @@ public class EmailFunc {
 
         //보내는 사람 주소
         String host     = "smtp.naver.com";
-        final String user   = "ENTER YOUR NAVER USERNAME HERE";
-        final String password  = "ENTER YOUR NAVER PASSWORD HERE";
+        final String user   = "gyeonseok@naver.com";
+        final String password  = "$y1K!Nv72";
 
         //받는 사람 주소
         String to     = "koo04034@gmail.com";

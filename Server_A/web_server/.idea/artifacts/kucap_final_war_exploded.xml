@@ -1,0 +1,25 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="kucap_final:war exploded">
+    <output-path />
+    <root id="root">
+      <element id="javaee-facet-resources" facet="kucap_final/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="kucap_final" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="commons-codec-1.4" />
+          <element id="library" level="project" name="gson-2.8.2" />
+          <element id="library" level="project" name="httpcore-4.4.4" />
+          <element id="library" level="project" name="jackson-all-1.9.0" />
+          <element id="library" level="project" name="httpcore-nio-4.0-alpha6" />
+          <element id="library" level="project" name="httpclient-4.5.5" />
+          <element id="library" level="project" name="json-20180130" />
+          <element id="library" level="project" name="commons-logging-1.2 (1)" />
+          <element id="library" level="project" name="mysql-connector-java-8.0.11" />
+          <element id="library" level="project" name="json-simple-1.1.1" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

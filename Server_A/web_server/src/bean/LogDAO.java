@@ -24,7 +24,7 @@ public class LogDAO {
         //수정 요함
         Class.forName("com.mysql.cj.jdbc.Driver");
         String url = "jdbc:mysql://localhost:3306/ticker_database?autoReconnect=true&serverTimezone=UTC";
-        Connection conn = DriverManager.getConnection(url,"root","niconiconi990!");
+        Connection conn = DriverManager.getConnection(url,"root","");// 비밀번호 입력
 
         return conn;
 
